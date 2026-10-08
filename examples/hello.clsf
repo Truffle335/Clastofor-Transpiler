@@ -1,0 +1,2 @@
+str name = console.input("Your name: ");
+console.print("Hello, ", name, "!\n");

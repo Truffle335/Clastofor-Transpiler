@@ -1,0 +1,6 @@
+int age = 18;
+float pi = 3.14;
+str name = console.input("Enter your name: ");
+
+console.print("Hello, ", name, "!\n");
+console.print("Your age plus 5 is: ", age + 5, "\n");

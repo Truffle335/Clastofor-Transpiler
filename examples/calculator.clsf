@@ -1,0 +1,3 @@
+int a = console.input("First number: ");
+int b = console.input("Second number: ");
+console.print("Sum: ", a + b, "\n");
