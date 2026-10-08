@@ -4,6 +4,8 @@ A fast, minimal DSL that compiles directly to C++17.
 
 Write simple programs in Clastofor syntax, get optimized C++ binaries.
 
+**Version: 1.0**
+
 ## Features
 
 - **Fast compilation** — transpiles to C++17, compiled with clang++
@@ -114,6 +116,17 @@ Clear error reporting with line numbers and suggestions:
 - `ErrorVar` — variable issues
 - `ErrorName` — undefined names
 - `ErrorFunction` — function call errors
+
+## Current Limitations (v1.0)
+
+Version 1.0 is minimal by design. Future versions will add:
+
+- Control flow (if/else, loops)
+- Functions and procedures
+- Arrays and data structures
+- More complex expressions
+
+For now, Clastofor focuses on core functionality: variables, I/O, and basic math.
 
 ## Notes
 
