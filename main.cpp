@@ -56,7 +56,7 @@ public:
 // ==========================================
 
 bool run_compilation(const std::string& input_cpp, const std::string& output_bin) {
-    std::string flags = " -std=c++17 -O3 -ffast-math -fomit-frame-pointer -Wno-deprecated ";
+    std::string flags = " -std=c++17 -O2 -Wall ";
     std::string cmd = "clang++ " + flags + " \"" + input_cpp + "\" -o \"" + output_bin + "\" 2>/dev/null";
     int result = std::system(cmd.c_str());
     return (result == 0);
@@ -84,10 +84,6 @@ class FastLexer {
     std::string_view src;
     size_t pos = 0;
     size_t current_line = 1;
-
-    bool is_keyword(std::string_view word) {
-        return word == "int" || word == "float" || word == "str";
-    }
 
 public:
     FastLexer(std::string_view source) : src(source) {}
@@ -146,7 +142,8 @@ public:
             }
 
             if (current == '"') {
-                pos++; size_t start = pos;
+                pos++; 
+                size_t start = pos;
                 while (pos < src.length() && src[pos] != '"') {
                     if (src[pos] == '\n') current_line++;
                     pos++;
@@ -198,7 +195,11 @@ struct VarDeclNode : public ASTNode {
 
     std::string codegen() const override {
         std::string cpp_type = (type == "str") ? "std::string" : type;
-        return init_expr ? (cpp_type + " " + name + " = " + init_expr->codegen() + ";") : (cpp_type + " " + name + ";");
+        if (init_expr) {
+            return cpp_type + " " + name + " = " + init_expr->codegen() + ";";
+        } else {
+            return cpp_type + " " + name + ";";
+        }
     }
 };
 
@@ -207,12 +208,12 @@ struct PrintNode : public ASTNode {
     PrintNode(std::vector<std::shared_ptr<ASTNode>> a) : args(std::move(a)) {}
 
     std::string codegen() const override {
-        std::string code = "([](auto&&... args){ ((std::cout << args), ...); })(";
+        std::string code;
         for (size_t i = 0; i < args.size(); ++i) {
-            code += args[i]->codegen();
-            if (i + 1 < args.size()) code += ", ";
+            code += "std::cout << " + args[i]->codegen() + ";";
+            if (i + 1 < args.size()) code += " ";
         }
-        return code + ");";
+        return code;
     }
 };
 
@@ -221,11 +222,15 @@ struct InputNode : public ASTNode {
     InputNode(std::shared_ptr<ASTNode> p) : prompt(std::move(p)) {}
 
     std::string codegen() const override {
-        std::string res = "([&](){ ";
+        std::string res = "([&]() { ";
         if (prompt) {
-            res += "std::cout << (" + prompt->codegen() + "); std::cout.flush(); ";
+            res += "std::cout << (" + prompt->codegen() + "); ";
+            res += "std::cout.flush(); ";
         }
-        res += "std::string _in; std::getline(std::cin, _in); return _in; })()";
+        res += "std::string _input; ";
+        res += "std::getline(std::cin, _input); ";
+        res += "return _input; ";
+        res += "})()";
         return res;
     }
 };
@@ -236,7 +241,11 @@ struct LiteralNode : public ASTNode {
     LiteralNode(std::string v, bool str = false) : value(std::move(v)), is_string(str) {}
 
     std::string codegen() const override {
-        return is_string ? ("\"" + value + "\"") : value;
+        if (is_string) {
+            return "\"" + value + "\"";
+        } else {
+            return value;
+        }
     }
 };
 
@@ -255,12 +264,17 @@ struct ProgramNode : public ASTNode {
     std::vector<std::shared_ptr<ASTNode>> statements;
 
     std::string codegen() const override {
-        std::string code = "#include <iostream>\n#include <string>\n\n";
+        std::string code = "#include <iostream>\n";
+        code += "#include <string>\n";
+        code += "\n";
         code += "int main() {\n";
+        
         for (const auto& stmt : statements) {
             code += "    " + stmt->codegen() + "\n";
         }
-        code += "    return 0;\n}\n";
+        
+        code += "    return 0;\n";
+        code += "}\n";
         return code;
     }
 };
@@ -318,8 +332,14 @@ public:
     std::shared_ptr<ASTNode> parse_primary() {
         Token tok = current();
 
-        if (tok.type == TOK_NUMBER) { consume(); return std::make_shared<LiteralNode>(std::string(tok.text), false); }
-        if (tok.type == TOK_STRING_LITERAL) { consume(); return std::make_shared<LiteralNode>(std::string(tok.text), true); }
+        if (tok.type == TOK_NUMBER) { 
+            consume(); 
+            return std::make_shared<LiteralNode>(std::string(tok.text), false); 
+        }
+        if (tok.type == TOK_STRING_LITERAL) { 
+            consume(); 
+            return std::make_shared<LiteralNode>(std::string(tok.text), true); 
+        }
 
         if (tok.type == TOK_IDENTIFIER) {
             std::string var_name = std::string(tok.text);
