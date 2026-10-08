@@ -1,136 +1,124 @@
-# Clastofor-Transpiler
+# Clastofor
 
-Clastofor is a small experimental DSL (domain-specific language) and transpiler designed for learning, prototyping, and exploring how custom languages can be compiled into native C++17 code.
+A fast, minimal DSL that compiles directly to C++17.
 
-The project currently supports a minimalist syntax for variable declarations, console output, and console input, and it generates readable C++ code from `.clsf` source files.
+Write simple programs in Clastofor syntax, get optimized C++ binaries.
 
-## Project Goals
+## Features
 
-- Create a simple custom language with clear, readable syntax
-- Learn the basics of lexing, parsing, and AST generation
-- Transpile a DSL into valid C++17 code
-- Build a friendly developer experience with helpful error messages
-- Experiment with language design and compiler concepts
+- **Fast compilation** — transpiles to C++17, compiled with clang++
+- **Minimal syntax** — only what you need, nothing extra
+- **Direct output** — generates readable, standard C++ code
+- **Zero overhead** — no runtime, no virtual machine
 
-## Current Features
+## Quick Start
 
-### Variable declarations
-- `int` — integer variables
-- `float` — floating-point variables
-- `str` — string variables
+### Install
 
-Example:
-
-```text
-int age = 18;
-float pi = 3.14;
-str name = "Alice";
+```bash
+g++ -std=c++17 main.cpp -o clsf
 ```
 
-### Console output
-- `console.print(...)` — prints values to the console
+### Write a program
 
-Example:
-
-```text
-console.print("Hello, world!\n");
-console.print("Your age is: ", age, "\n");
-```
-
-### Console input
-- `console.input("prompt")` — reads input from the user
-
-Example:
+Create `hello.clsf`:
 
 ```text
-str name = console.input("Enter your name: ");
-```
-
-### Arithmetic support
-- `+`, `-`, `*`, `/`, `%`
-- basic division-by-zero protection
-
-Example:
-
-```text
-int total = 10 + 5;
-float result = 7.5 / 2.0;
-```
-
-## Error System
-
-The transpiler includes a custom exception system with human-readable diagnostics such as:
-
-- `ErrorSyntax:`
-- `ErrorMath:`
-- `ErrorFunction:`
-- `ErrorVar:`
-- `ErrorName:`
-
-Each error includes:
-- line number,
-- reason,
-- suggested fix.
-
-## Example Program
-
-```text
-int age = 18;
-float pi = 3.14;
-str name = console.input("Enter your name: ");
-
+str name = console.input("Your name: ");
 console.print("Hello, ", name, "!\n");
-console.print("Your age plus 5 is: ", age + 5, "\n");
+```
+
+### Run it
+
+```bash
+./clsf
+# Select: 1 (hello.clsf)
+# Output: compiled and executed
+```
+
+## Language Syntax
+
+### Variables
+
+```text
+int x = 42;
+float pi = 3.14;
+str message = "Hello";
+```
+
+### Output
+
+```text
+console.print("Value: ", x, "\n");
+console.print(pi, " ", message, "\n");
+```
+
+### Input
+
+```text
+str response = console.input("Question: ");
+int number = console.input("Number: ");
+```
+
+### Math
+
+```text
+int result = 10 + 5;
+int division = 20 / 4;
+int remainder = 10 % 3;
+```
+
+Supported operators: `+`, `-`, `*`, `/`, `%`
+
+Division by zero is caught and reported.
+
+## Example Programs
+
+### Simple Calculator
+
+```text
+int a = console.input("First number: ");
+int b = console.input("Second number: ");
+console.print("Sum: ", a + b, "\n");
+```
+
+### String Output
+
+```text
+str greeting = "Welcome";
+console.print(greeting, " to Clastofor\n");
 ```
 
 ## How It Works
 
-The compiler pipeline is simple:
+1. Lexer tokenizes source code
+2. Parser builds an AST
+3. Code generator produces C++17
+4. clang++ compiles to executable
+5. Program runs
 
-1. Find `.clsf` files in the current directory
-2. Lex the source into tokens
-3. Parse tokens into an AST
-4. Generate C++17 code
-5. Compile the generated C++ file with `clang++`
-6. Run the executable
+Generated C++ files are saved in `CompliteFilesClsf/` directory.
 
 ## Requirements
 
 - C++17 compiler
-- `clang++` recommended
-- Linux/macOS environment recommended
+- clang++ installed
+- Linux/macOS
 
-## Build and Run
+## Error Messages
 
-Compile the transpiler:
+Clear error reporting with line numbers and suggestions:
 
-```bash
-g++ -std=c++17 main.cpp -o clsf_compiler
-```
-
-Place your `.clsf` files in the same directory as the executable and run:
-
-```bash
-./clsf_compiler
-```
-
-## Repository Structure
-
-```text
-Clastofor-Transpiler/
-├── main.cpp
-├── README.md
-└── .gitignore
-```
+- `ErrorSyntax` — invalid syntax
+- `ErrorMath` — math errors (division by zero, etc.)
+- `ErrorVar` — variable issues
+- `ErrorName` — undefined names
+- `ErrorFunction` — function call errors
 
 ## Notes
 
-This project is still in active development. It is designed as an experimental learning project and a proof-of-concept for custom language tooling.
-
-## License
-
-This project is currently unlicensed. If you want, you can add an open-source license such as MIT or Apache 2.0 later.
+Clastofor is a minimal, practical language. It's designed to be simple and fast, not feature-rich.
 
 ## Author
 
-Created by Truffle335, with the language concept designed independently and the implementation assisted with AI tooling.
+Created by Truffle335. Language design and compiler implementation.
