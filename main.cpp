@@ -196,7 +196,19 @@ struct VarDeclNode : public ASTNode {
     std::string codegen() const override {
         std::string cpp_type = (type == "str") ? "std::string" : type;
         if (init_expr) {
-            return cpp_type + " " + name + " = " + init_expr->codegen() + ";";
+            std::string init_value = init_expr->codegen();
+
+            if (type == "int") {
+                if (init_value.find("([&]()") != std::string::npos) {
+                    init_value = "std::stoi(" + init_value + ")";
+                }
+            } else if (type == "float") {
+                if (init_value.find("([&]()") != std::string::npos) {
+                    init_value = "std::stof(" + init_value + ")";
+                }
+            }
+
+            return cpp_type + " " + name + " = " + init_value + ";";
         } else {
             return cpp_type + " " + name + ";";
         }
@@ -457,7 +469,7 @@ public:
                 Token bad_tok = current();
 
                 if (bad_tok.type == TOK_IDENTIFIER) {
-                    throw ClsfException(ErrorType::Name, bad_tok.line, "Unknown name or invalid command statement '" + std::string(bad_tok.text) + "'", "Check name spelling or key type declaration (int, float, str, console.print).");
+                    throw ClsfException(ErrorType::Name, bad_tok.line, "Unknown name or invalid command statement '" + std::string(bad_tok.text) + "'", "Check name spelling or key type declaration.");
                 }
                 if (bad_tok.type == TOK_RPAREN) {
                     throw ClsfException(ErrorType::Syntax, bad_tok.line, "Unexpected closing bracket ')'", "Remove stray bracket.");
