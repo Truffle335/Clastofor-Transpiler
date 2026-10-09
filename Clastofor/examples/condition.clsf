@@ -1,0 +1,8 @@
+int age = 20;
+bool isAdult = age >= 18;
+
+if (isAdult) {
+    console.print("Adult\n");
+} else {
+    console.print("Minor\n");
+}
