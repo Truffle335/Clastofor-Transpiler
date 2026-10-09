@@ -2,16 +2,19 @@
 
 A minimal DSL and transpiler that generates readable C++17 code.
 
-Clastofor is a lightweight experimental language built around the idea of simple syntax, clean code generation, and easy compiler experimentation. It currently supports the essentials: variables, I/O, arithmetic, and custom error reporting.
+Clastofor is a lightweight experimental language built around the idea of simple syntax, clean code generation, and easy compiler experimentation. It supports variables, I/O, arithmetic, booleans, and conditional logic.
 
 ## Version
-v1.0
+v1.1
 
 ## Features
-- Variable declarations for `int`, `float`, and `str`
+- Variable declarations for `int`, `float`, `str`, and `bool`
+- Boolean literals: `true` and `false`
+- Conditional statements: `if (...) { ... } else { ... }`
 - Console output via `console.print(...)`
 - Console input via `console.input(...)`
 - Basic arithmetic: `+`, `-`, `*`, `/`, `%`
+- Comparisons: `>`, `<`, `>=`, `<=`, `==`, `!=`
 - Division-by-zero detection
 - Custom error messages with line-based diagnostics
 - Transpilation to readable C++17 source
@@ -27,8 +30,14 @@ g++ -std=c++17 main.cpp -o clsf
 
 ### Create a `.clsf` file
 ```text
-str name = console.input("Your name: ");
-console.print("Hello, ", name, "!\n");
+int age = 20;
+bool isAdult = age >= 18;
+
+if (isAdult) {
+    console.print("Adult\n");
+} else {
+    console.print("Minor\n");
+}
 ```
 
 ### Run
@@ -40,12 +49,14 @@ Then select the `.clsf` file to compile and run.
 
 ## Example
 ```text
-int age = 18;
-float pi = 3.14;
-str name = console.input("Enter your name: ");
+int age = 20;
+bool isAdult = age >= 18;
 
-console.print("Hello, ", name, "!\n");
-console.print("Your age plus 5 is: ", age + 5, "\n");
+if (isAdult) {
+    console.print("Adult\n");
+} else {
+    console.print("Minor\n");
+}
 ```
 
 ## Repository Structure
@@ -56,7 +67,8 @@ Clastofor-Transpiler/
 │   └── examples/
 │       ├── hello.clsf
 │       ├── calculator.clsf
-│       └── input.clsf
+│       ├── input.clsf
+│       └── condition.clsf
 ├── README.md
 ├── UPDATES.md
 ├── LICENSE
