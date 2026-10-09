@@ -21,6 +21,7 @@ v1.0
 
 ### Build the transpiler
 ```bash
+cd Clastofor
 g++ -std=c++17 main.cpp -o clsf
 ```
 
@@ -47,22 +48,19 @@ console.print("Hello, ", name, "!\n");
 console.print("Your age plus 5 is: ", age + 5, "\n");
 ```
 
-## Current Status
-Clastofor v1.0 is a minimal but working foundation. It focuses on the essentials: variables, input/output, arithmetic, and clean C++ generation.
-
-## Requirements
-- C++17 compiler
-- `clang++` or `g++`
-- Linux/macOS environment recommended
-
 ## Repository Structure
 ```text
 Clastofor-Transpiler/
-├── main.cpp
+├── Clastofor/
+│   ├── main.cpp
+│   └── examples/
+│       ├── hello.clsf
+│       ├── calculator.clsf
+│       └── input.clsf
 ├── README.md
 ├── UPDATES.md
-├── .gitignore
-└── examples/
+├── LICENSE
+└── .gitignore
 ```
 
 ## Notes
