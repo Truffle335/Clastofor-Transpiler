@@ -672,7 +672,48 @@ std::string read_file_content(const fs::path& filepath) {
     return buffer.str();
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    if (argc > 1) {
+        std::string cmd = argv[1];
+
+        if (cmd == "init") {
+            fs::path target = (argc > 2) ? fs::path(argv[2]) : fs::current_path() / "main.clsf";
+            if (target.extension().empty()) {
+                target += ".clsf";
+            }
+
+            if (!fs::exists(target.parent_path())) {
+                std::error_code ec;
+                fs::create_directories(target.parent_path(), ec);
+            }
+
+            if (!fs::exists(target)) {
+                std::ofstream out(target);
+                if (!out.is_open()) {
+                    std::cout << "[ ErrorFile: Failed to create project file ]\n";
+                    return 1;
+                }
+                out << "int age = 18;\n";
+                out << "str name = console.input(\"Enter your name: \" );\n";
+                out << "console.print(\"Hello, \", name, \"!\n\");\n";
+                out << "console.print(\"You are \", age, \" years old.\\n\");\n";
+                out.close();
+            }
+
+            std::cout << "Initialized Clastofor project.\n";
+            std::cout << "Created file: " << target.string() << "\n";
+            return 0;
+        }
+
+        if (cmd == "--help" || cmd == "-h") {
+            std::cout << "Usage:\n";
+            std::cout << "  Clastofor            Run interactive transpiler\n";
+            std::cout << "  Clastofor init       Create a starter .clsf file in the current directory\n";
+            std::cout << "  Clastofor init file.clsf  Create a starter file with a custom name\n";
+            return 0;
+        }
+    }
+
     std::vector<fs::path> files = find_local_clsf_files();
 
     if (files.empty()) {
