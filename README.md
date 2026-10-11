@@ -1,107 +1,107 @@
 # Clastofor
 
-Clastofor — это транспайлер (транслятор исходного кода) простого языка программирования в C++17. Язык создан для тех, кто хочет писать программы на C++, но сталкивается со сложностью его синтаксиса и настройки окружения. Clastofor берёт на себя рутинную часть: вы пишете на упрощённом языке с понятным синтаксисом, а транспайлер превращает ваш код в полноценный C++ и сразу компилирует его через clang++.
+Clastofor is a transpiler (source-to-source translator) from a simple programming language into C++17. It is designed for those who want to write programs in C++ but struggle with the complexity of its syntax and environment setup. Clastofor takes over the routine work: you write code in a simplified language with clear syntax, and the transpiler turns it into proper C++ and compiles it immediately via clang++.
 
 ---
 
-## Основные сведения
+## Overview
 
-| Параметр | Значение |
+| Parameter | Value |
 |---|---|
-| Название | Clastofor |
-| Версия | 1.2.2 |
-| Тип | Транспайлер в C++ |
-| Автор | truffle355 |
-| Дата выпуска | 08.10.2026 |
-| Язык реализации | C++17 |
-| Целевой язык | C++17 (компиляция через clang++) |
-| Расширение исходных файлов | .clsf |
-| Платформа | Кроссплатформенная (Linux, macOS, Windows с установленным clang++) |
+| Name | Clastofor |
+| Version | 1.2.2 |
+| Type | C++ transpiler |
+| Author | truffle355 |
+| Release date | 08.10.2026 |
+| Implementation language | C++17 |
+| Target language | C++17 (compiled via clang++) |
+| Source file extension | .clsf |
+| Platform | Cross-platform (Linux, macOS, Windows with clang++ installed) |
 
 ---
 
-## Смысл языка
+## Purpose of the language
 
-Clastofor создан с одной целью: снизить порог входа в C++. Многие люди хотят писать на C++, но отказываются от этого из-за:
+Clastofor was created with a single goal: to lower the entry barrier to C++. Many people want to write in C++ but give up because of:
 
-- сложного синтаксиса (шаблоны, указатели, заголовочные файлы, #include, std:: префиксы);
-- необходимости вручную настраивать сборку и компиляцию;
-- громоздких конструкций для простых задач (ввод, вывод, случайные числа).
+- complex syntax (templates, pointers, header files, #include, std:: prefixes);
+- the need to configure the build and compilation manually;
+- bulky constructs for simple tasks (input, output, random numbers).
 
-Clastofor решает эти проблемы. Вы пишете простой читаемый код — транспайлер превращает его в корректный C++ и сразу компилирует. По сути, Clastofor — это мост между простотой и мощью C++.
-
----
-
-## Как это работает
-
-1. Вы создаёте файл с расширением .clsf в текущей директории.
-2. Запускаете транспайлер.
-3. Программа находит все .clsf файлы в папке и предлагает выбрать один.
-4. Исходник проходит три этапа:
-   - Лексический анализ (FastLexer) — разбивает текст на токены.
-   - Парсинг (Parser) — строит абстрактное синтаксическое дерево (AST) с проверкой типов и семантики.
-   - Генерация кода (codegen) — превращает AST в C++ код.
-5. Сгенерированный .cpp файл сохраняется в папку CompliteFilesClsf/.
-6. Вызывается clang++ для компиляции в исполняемый файл.
-7. Готовый бинарник сразу запускается.
-
-Все ошибки языка (синтаксис, типы, необъявленные переменные, деление на ноль) перехватываются и выводятся в понятном виде с указанием строки и подсказкой.
+Clastofor solves these problems. You write simple readable code — the transpiler turns it into correct C++ and compiles it immediately. In essence, Clastofor is a bridge between simplicity and the power of C++.
 
 ---
 
-## Синтаксис языка
+## How it works
 
-### Объявление переменных
+1. You create a file with the .clsf extension in the current directory.
+2. You run the transpiler.
+3. The program finds all .clsf files in the folder and offers you to choose one.
+4. The source goes through three stages:
+   - Lexical analysis (FastLexer) — splits the text into tokens.
+   - Parsing (Parser) — builds an abstract syntax tree (AST) with type and semantic checks.
+   - Code generation (codegen) — turns the AST into C++ code.
+5. The generated .cpp file is saved to the CompliteFilesClsf/ folder.
+6. clang++ is invoked to compile it into an executable.
+7. The resulting binary is run immediately.
+
+All language errors (syntax, types, undeclared variables, division by zero) are caught and printed in a clear form with the line number and a hint.
+
+---
+
+## Language syntax
+
+### Variable declarations
 
 int x = 10;
 float pi = 3.14;
 str name = "Truffle";
 bool flag = true;
 
-Типы: int, float, str, bool.
+Types: int, float, str, bool.
 
-### Вывод в консоль
+### Console output
 
 console.print("Hello, world!");
 console.print("x = ", x);
 
-### Ввод с консоли
+### Console input
 
-int age = console.input("Введите возраст: ");
-str name = console.input("Ваше имя: ");
+int age = console.input("Enter your age: ");
+str name = console.input("Your name: ");
 
-Тип результата автоматически подстраивается под тип переменной.
+The result type is automatically adjusted to the variable type.
 
-### Условия
+### Conditions
 
 if (x > 10) {
-    console.print("Больше десяти");
+    console.print("Greater than ten");
 } else {
-    console.print("Меньше или равно десяти");
+    console.print("Less than or equal to ten");
 }
 
-Поддерживаются операторы сравнения: >, <, >=, <=, ==, !=.
+Supported comparison operators: >, <, >=, <=, ==, !=.
 
-### Арифметика
+### Arithmetic
 
 int a = 5 + 3 * 2;
 int b = 10 % 3;
 float c = 5.0 / 2.0;
 
-Операторы: +, -, *, /, %.
+Operators: +, -, *, /, %.
 
-### Присваивание
+### Assignment
 
 x = 42;
-name = "Новое имя";
+name = "New name";
 
-### Импорт модулей
+### Module import
 
 import random;
 
-После импорта становятся доступны функции модуля.
+After the import, the module's functions become available.
 
-### Случайные числа (модуль random)
+### Random numbers (random module)
 
 int n = random.random.int(1, 100);
 float f = random.random.float(0.0, 1.0);
@@ -109,29 +109,29 @@ bool b = random.random.bool();
 
 ---
 
-## Модули
+## Modules
 
-Модули — это .cpp файлы, лежащие в папке modules/ рядом с транспайлером. Они автоматически подключаются к сгенерированному коду при импорте.
+Modules are .cpp files located in the modules/ folder next to the transpiler. They are automatically included into the generated code when imported.
 
-Официальный набор модулей скачивается командой init из репозитория GitHub в папку modules/.
+The official module set is downloaded by the init command from the GitHub repository into the modules/ folder.
 
 ---
 
-## Обработка ошибок
+## Error handling
 
-Clastofor различает несколько категорий ошибок и выводит их с указанием строки, причины и подсказки:
+Clastofor distinguishes several error categories and prints them with the line number, reason, and a hint:
 
-| Категория | Что означает |
+| Category | Meaning |
 |---|---|
-| ErrorSyntax | Нарушение синтаксиса (пропущена ;, незакрытая скобка и т.д.) |
-| ErrorMainKey | Неверное использование ключевого слова или структуры |
-| ErrorMath | Математическая ошибка (деление на ноль, лишняя точка в числе) |
-| ErrorFunction | Ошибка в вызове функции |
-| ErrorVar | Ошибка, связанная с переменной (повторное объявление) |
-| ErrorName | Неизвестное имя или необъявленная переменная |
-| ErrorType | Несовпадение типов |
+| ErrorSyntax | Syntax violation (missing ;, unclosed bracket, etc.) |
+| ErrorMainKey | Incorrect use of a keyword or construct |
+| ErrorMath | Math error (division by zero, extra dot in a number) |
+| ErrorFunction | Error in a function call |
+| ErrorVar | Variable-related error (redeclaration) |
+| ErrorName | Unknown name or undeclared variable |
+| ErrorType | Type mismatch |
 
-Пример вывода:
+Example output:
 
 [ ErrorType: ] (Line 4)
   Reason: Type mismatch: cannot initialize 'int' variable 'x' with 'str' value
@@ -139,18 +139,18 @@ Clastofor различает несколько категорий ошибок 
 
 ---
 
-## Требования
+## Requirements
 
-- Компилятор clang++ с поддержкой C++17.
-- Утилита curl или wget для команды init.
-- Стандартная библиотека C++17.
+- clang++ compiler with C++17 support.
+- curl or wget utility for the init command.
+- Standard C++17 library.
 
 ---
 
-## Лицензия и авторство
+## License and authorship
 
-Автор: truffle355
-Версия: 1.2.2
-Дата выпуска: 08.10.2026
+Author: truffle355
+Version: 1.2.2
+Release date: 08.10.2026
 
-Clastofor распространяется как свободный инструмент для упрощения работы с C++.
+Clastofor is distributed as a free tool for simplifying work with C++.
